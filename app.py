@@ -206,7 +206,7 @@ with st.sidebar:
             if not df.empty:
                 st.session_state.paradas_df = df
                 st.success(f"Se cargaron {len(df)} paradas.")
-                st.session_state.rutas_calculadas = None # Resetear resultados
+                st.session_state.rutas_calculadas = None 
                 st.session_state.analisis_ia = None
 
     with st.expander("2. Flota de Vehículos", expanded=True):
@@ -227,13 +227,12 @@ with st.sidebar:
 
     st.header("Acciones")
     if st.button("🚀 Optimizar Rutas", type="primary", use_container_width=True):
-        with st.spinner("Calculando las rutas más eficientes..."):
-            st.session_state.rutas_calculadas = run_optimization(
-                st.session_state.paradas_df,
-                st.session_state.vehiculos,
-                st.session_state.depot_coords
-            )
-            st.session_state.analisis_ia = None # Resetear análisis anterior
+        st.session_state.rutas_calculadas = run_optimization(
+            st.session_state.paradas_df,
+            st.session_state.vehiculos,
+            st.session_state.depot_coords
+        )
+        st.session_state.analisis_ia = None 
 
     if st.session_state.rutas_calculadas:
         if st.button("🤖 Analizar con IA", use_container_width=True):
@@ -244,14 +243,13 @@ with st.sidebar:
 # ==============================================================================
 st.header("Mapa de Operación")
 
-# Preparar datos para el mapa
 if not st.session_state.paradas_df.empty:
     map_data = st.session_state.paradas_df[['lat', 'lon']].copy()
     depot_df = pd.DataFrame([st.session_state.depot_coords])
     st.map(pd.concat([map_data, depot_df]), zoom=12)
 else:
     st.map(pd.DataFrame([st.session_state.depot_coords]), zoom=12)
-    st.info("Carga un archivo CSV o añade paradas para comenzar.")
+    st.info("Carga un archivo CSV para visualizar las paradas.")
 
 st.header("Resultados de la Optimización")
 
